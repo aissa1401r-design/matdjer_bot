@@ -11,7 +11,7 @@ TOKEN = os.environ.get("BOT_TOKEN")
 application = ApplicationBuilder().token(TOKEN).build()
 
 # 3. انشئ سيرفر Flask تاع Render
-app = Flask(name)
+app = Flask(__name__)
 
 # 4. الكوموند /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
