@@ -1,17 +1,30 @@
-import telebot
 import os
+import threading
+from flask import Flask
+from telegram import Update
+from telegram.ext import Application,CommandHandler, ContextTypes
+
+app=Flask(__name__)
+@app.route('/')
+def home():
+    return "Matdjar bot is running..."
+
+def run_web():
+    app.run(host='0.0.0.0', port=10000)
 
 BOT_TOKEN=os.getenv("BOT_TOKEN")
-bot=telebot.TeleBot(BOT_TOKEN)
 
-@bot.message_handler(commends=["start"])
-def send_welcome(message):
-  bot.reply_to(message, "مرجبا بك في متجرك  \nباش تشوف الاوامر اكتب /help")
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("مرحبا, البوت في الخدمة")
 
-@bot.message_handler(commands=['help'])
-def send_help(message):
-    bot.reply_to(message, "الاوامر المتاحة :  \n بداية - start\n المساعدة - help")
+def main():
+    threading.Thread(target=run_web).start()
 
-print("bot is running...")
-bot.infinity_polling()
+
+    application= Application.builder().token(BOT_TOKEN).build()
+    application.add_handler(commandHandler("start",start))
+    application.run_polling()
+
+if name == (__main__):
+    main()
   
