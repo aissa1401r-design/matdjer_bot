@@ -22,7 +22,7 @@ def main():
 
 
     application= Application.builder().token(BOT_TOKEN).build()
-    application.add_handler(commandHandler("start",start))
+    application.add_handler(CommandHandler("start",start))
     application.run_polling()
 
 if __name__ == "__main__":
