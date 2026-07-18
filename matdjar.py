@@ -1,30 +1,37 @@
 import os
-import threading
-from flask import Flask
+import asyncio
+from flask import Flask, request
 from telegram import Update
-from telegram.ext import Application,CommandHandler, ContextTypes
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
-app=Flask(__name__)
-@app.route('/')
-def home():
-    return "Matdjar bot is running..."
+# 1. جيب التوكن من Environment Variables تاع Render
+TOKEN = os.environ.get("BOT_TOKEN")
 
-def run_web():
-    app.run(host='0.0.0.0', port=10000)
+# 2. انشئ التطبيق تاع تيليغرام
+application = ApplicationBuilder().token(TOKEN).build()
 
-BOT_TOKEN=os.getenv("BOT_TOKEN")
+# 3. انشئ سيرفر Flask تاع Render
+app = Flask(name)
 
+# 4. الكوموند /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("مرحبا, البوت في الخدمة")
+    await update.message.reply_text("مرحبا! البوت راه خدام ✅")
 
-def main():
-    threading.Thread(target=run_web).start()
+application.add_handler(CommandHandler("start", start))
 
+# 5. الرابط اللي تيليغرام يبعث فيه الرسائل
+@app.route(f"/{TOKEN}", methods=["POST"])
+def webhook():
+    update = Update.de_json(request.get_json(force=True), application.bot)
+    asyncio.run(application.process_update(update))
+    return "ok"
 
-    application= Application.builder().token(BOT_TOKEN).build()
-    application.add_handler(CommandHandler("start",start))
-    application.run_polling()
+# 6. الصفحة الرئيسية باش Render مايطفيش
+@app.route("/")
+def home():
+    return "Bot is alive"
 
-if __name__ == "__main__":
-    main()
-  
+# 7. تشغيل السيرفر
+if name == "main":
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
