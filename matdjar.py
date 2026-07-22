@@ -20,7 +20,7 @@ def webhook():
         text = data["message"].get("text", "")
 
         if text == "/start":
-            send_message(chat_id, f"مرحبا بك في {SHOPE_NAME} \n أي شيئ تريده اليوم")
+            send_message(chat_id, f"مرحبا بك في متجرك: {SHOPE_NAME} \n أي شيئ تريدينه اليوم")
 
     return "ok"
 
