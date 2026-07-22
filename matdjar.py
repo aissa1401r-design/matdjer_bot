@@ -9,14 +9,15 @@ app = Flask(__name__)
 application = Application.builder().token(TOKEN).build()
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("✅ البوت خدام")
+    await update.message.reply_text("✅ البوت خدام 100%")
 
 application.add_handler(CommandHandler("start", start))
 
 @app.post(f"/{TOKEN}")
 def webhook():
     update = Update.de_json(request.get_json(force=True), application.bot)
-    application.update_queue.put_nowait(update)
+    # هاذي تخدم مع 3.10 و 20.7
+    application.create_task(application.process_update(update))
     return "ok"
 
 @app.get("/")
