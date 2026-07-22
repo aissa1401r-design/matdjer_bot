@@ -1,7 +1,7 @@
 import os
 import requests
 from flask import Flask, request
-
+SHOPE_NAME=os.getenv("CHOPE_NAME","متجري")
 TOKEN = os.environ.get("BOT_TOKEN")
 API_URL = f"https://api.telegram.org/bot{TOKEN}"
 
@@ -19,7 +19,7 @@ def webhook():
         text = data["message"].get("text", "")
 
         if text == "/start":
-            send_message(chat_id, "البوت خدام اخيرا بلا PTB")
+            send_message(chat_id, f"مرحبا بك في {CHOPE_NAME} \n أي شيئ تريده اليوم")
 
     return "ok"
 
